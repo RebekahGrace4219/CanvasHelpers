@@ -22,13 +22,13 @@ from makeGroups import makeGroups
 
 
 #Get the right class 
-API_URL = "https://canvas.ucdavis.edu/"
-API_KEY = "3438~BBpployv24qF2oC6d9o6HldIbUFihz0sTeK9bgHnDZvVnEa3nEgXK35xbPlN3lG0"
+API_URL = "canvas url"
+API_KEY = "key"
 
 #Macros that will have to change to the appropriate class and survey number
-CLASS_ID = 546554
-QUIZ_ID = 111034
-className = "ECS 154A"
+CLASS_ID = classid
+QUIZ_ID = quizid
+className = "className"
 studyGroupNumber = 3
 
 #Get the class data from canvas
