@@ -22,8 +22,8 @@ from makeGroups import makeGroups
 
 
 #Get the right class 
-API_URL = "canvas url"
-API_KEY = "key"
+API_URL = "url"
+API_KEY = "api_key"
 
 #Macros that will have to change to the appropriate class and survey number
 CLASS_ID = classid
@@ -53,6 +53,11 @@ dictStudentDidNotTakeSurvey = parseEmails(dictStudentTakeSurvey, canvasClass)
 #Find the people who were matchedBefore, place it into a dict 
 matchedBefore = invalidGroupDict(canvas, CLASS_ID)
 
-makeGroups(dictStudentTakeSurvey, dictStudentDidNotTakeSurvey, matchedBefore)
+#Acutally make the groups
+groups = makeGroups(dictStudentTakeSurvey, dictStudentDidNotTakeSurvey, matchedBefore)
 
+for i in range(len(groups)):
+    for j in range(len(groups[i])):
+        print(i, " ", j," ",groups[i][j].name)
+print()
 print("finish")

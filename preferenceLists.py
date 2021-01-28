@@ -9,7 +9,6 @@ from scoringFunc import scoreOneByGroup
 def preferenceSymmetricalSort(listStudents: list, typeSort: str, matchedBefore: dict):
     dictStudentReturn = dict()
 
-
     #First select the student or group you are scoring
     for student1 in listStudents:
         #Intialize an empty array 
@@ -45,7 +44,9 @@ def preferenceSymmetricalSort(listStudents: list, typeSort: str, matchedBefore: 
     return dictStudentReturn
         
 #Create a dictionary of students, where each student/student Group Ranks another
-def preferenceAsymmetricalSort(listStudents1, listStudents2, typeStudent: str):
+#listStudent1: the list of students judging
+#listStudent2: the list of the list of students to be judged
+def preferenceAsymmetricalSort(listStudents1:list , listStudents2: list, typeSort: str, matchBefore: dict):
     #Create an empty dictionary to fill
     dictStudent = dict()
     
@@ -53,21 +54,21 @@ def preferenceAsymmetricalSort(listStudents1, listStudents2, typeStudent: str):
     for student1 in listStudents1:
         #Intialize an empty array 
         tempArray = [] 
-        for student2 in listStudents2:
+        for student2List in listStudents2:
             if typeSort == "OneByGroup":
-                tempArray.append([str(student2.id), scoreOneByGroup(student1, student2)])
+                tempArray.append([str(student2List.idNum), scoreOneByGroup(student2List, student1, matchBefore)])
             elif typeSort == "GroupByOne":
-                tempArray.append([str(student2.id), scoreGroupByOne(student1, student2)])    
+                tempArray.append([str(student2List[0].idNum), scoreGroupByOne(student1, student2List, matchBefore)])    
 
         #Now sort the list with max score first
-        sorted(tempArray, key = lambda score: score[x], reverse = reverse)
+        sorted(tempArray, key = lambda score: score[1], reverse = True)
         
         #Take only the ids of the first student of the sets
-        tempArray = [student[1] for student in tempArray]
+        tempArray = [student[0] for student in tempArray]
         if typeSort == "OneByGroup":
-            dictStudent[str(student1[0].id)] = tempArray
+            dictStudent[str(student1[0].idNum)] = tempArray
         elif typeSort == "GroupByOne":
-            dictStudent[str(student1.id)] = tempArray
+            dictStudent[str(student1.idNum)] = tempArray
         else:
             print("Error, shoud not get here, in preferenceSymmetrical")
 

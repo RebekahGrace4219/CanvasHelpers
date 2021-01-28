@@ -1,43 +1,46 @@
-import argparse
-import canvasapi
-from src.logic.kudo_points import create_assignment_group
+
+from canvasapi import Canvas
+import pandas as pd
+from parseStudent import parse
+from parseStudent import parseEmails
+from makeGroups import makeGroups
+from checkVaildGroup import invalidGroupDict
+#from sendEmail import sendMessage
+#from groupFile import formGroups
 
 
-def create_argument_parser() -> argparse.ArgumentParser:
-    parser = argparse.ArgumentParser(prog='Canvas Tool Helper',
-                                     description='A collection of useful tools for interacting with Canvas',
-                                     fromfile_prefix_chars='$')
-    parser.add_argument('--key',
-                        dest='canvas_key',
-                        metavar='key',
-                        required=True,
-                        help="Your Canavs Access Token. "
-                             "If you don't have one you can get one by following "
-                             "directions under Manual Token Generation at "
-                             "https://canvas.instructure.com/doc/api/file.oauth.html#accessing-canvas-api")
-    parser.add_argument('--course_id',
-                        dest='course_id',
-                        required=True,
-                        type=int,
-                        help='The id of your course. You can find this right after /courses in the url '
-                             'of your course.\n '
-                             'For example, if the url of your course was https://canvas.ucdavis.edu/courses/1234 '
-                             'then your course id is 1234.')
+#Get the right class 
+API_URL = "https://canvas.ucdavis.edu/"
+API_KEY = "api_key_here"
 
-    parser.add_argument('--url', '--canvas_url',
-                        dest='canvas_url',
-                        default='https://canvas.ucdavis.edu/',
-                        help='Your canvas url. Example: https://canvas.ucdavis.edu/'
-                        )
+#Macros that will have to change to the appropriate class and survey number
+CLASS_ID = 1
+QUIZ_ID = 1
+className = "ECS 154A or ECS 050"
+studyGroupNumber = 2
 
+#Get the class data from canvas
+canvas = Canvas(API_URL, API_KEY)
+canvasClass = canvas.get_course(CLASS_ID)  
 
-    return parser
+# Get the right quiz and creating a Pandas dataFrame from the generated csv
+quiz = canvasClass.get_quiz(QUIZ_ID)
+studentReport = quiz.create_report("student_analysis")
+url = studentReport.file["url"]
+studentData = pd.read_csv(url)
 
+#Parse the student data of those that took the survey
+dictStudentTakeSurvey = parse(studentData, canvasClass)
 
-if __name__ == '__main__':
-    # runner()
-    p = create_argument_parser()
-    n = p.parse_args()
-    canvas_connection = canvasapi.Canvas(n.canvas_url, n.canvas_key)
-    course = canvas_connection.get_course(n.course_id)
-    create_assignment_group('Sparta', course,True)
+#Finds out who did not take survey (also updates the entire class with their school emails)
+dictStudentDidNotTakeSurvey = parseEmails(dictStudentTakeSurvey, canvasClass)
+
+#Find the people who were matchedBefore, place it into a dict 
+matchedBefore = invalidGroupDict(canvasClass)
+
+#Create the groups:
+groups = makeGroups(dictStudentTakeSurvey, dictStudentDidNotTakeSurvey, matchedBefore)
+
+#Now that groups are matched, send emails and form groups
+#formGroups(groups)
+#sendMessage(groups, className, studyGroupNumber)
