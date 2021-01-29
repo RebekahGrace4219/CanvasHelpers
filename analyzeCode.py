@@ -7,8 +7,9 @@ from matchingFunc import matchTime
 from matchingFunc import matchActivity
 from matchingFunc import matchInternational
 from scoringFunc import scoreAtLeastOneConfidenceLevel
+from checkValidGroup import isValidGroup
 
-def gradeGroups(groups: list):
+def gradeGroups(groups: list, matchBefore: dict):
 
     defaultStudents = 0  #
     studentsTakeSurvey = 0 #
@@ -20,6 +21,7 @@ def gradeGroups(groups: list):
     studentsGotTime = 0 #
 
     numGroups = 0 #
+    numValidGroups = 0 #
     groupsGotLeader = 0  #
 
     studentsWantInternational = 0 #
@@ -40,6 +42,9 @@ def gradeGroups(groups: list):
 
     for group in groups:
         numGroups = numGroups + 1
+
+        if isValidGroup(matchBefore, group):
+            numValidGroups = numValidGroups + 1
 
         #Leader
         flagLeader = False
@@ -220,4 +225,4 @@ def gradeGroups(groups: list):
     studentGotNoChoice = studentsTakeSurvey - studentGotFirstChoice - studentGotSecondChoice - studentGotThirdChoice - studentGotFourthChoice - studentGotFifthChoice
     print("Last choice: ", studentGotNoChoice)
 
-
+    print("\nGroups that are valid: "+ str(numValidGroups/numGroups * 100) + "%")
