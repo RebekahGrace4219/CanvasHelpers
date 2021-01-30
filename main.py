@@ -23,10 +23,24 @@ studyGroupNumber = 2
 canvas = Canvas(API_URL, API_KEY)
 canvasClass = canvas.get_course(CLASS_ID)  
 
-# Get the right quiz and creating a Pandas dataFrame from the generated csv
+# Get the right quiz
 quiz = canvasClass.get_quiz(QUIZ_ID)
 studentReport = quiz.create_report("student_analysis")
-url = studentReport.file["url"]
+reportProgress = None
+
+# URL of canvas progress object from studentReport
+reportProgressURL = studentReport.progress_url
+
+# parse so only the process id remains
+reportProgressID = reportProgressURL.removeprefix('https://canvas.ucdavis.edu/api/v1/progress/')
+​
+# wait for student report to finish generating while the process has not completed or failed 
+while reportProgress != 'completed' and reportProgress != 'failed':
+       reportProgressObj = canvas.get_progress(reportProgressID)
+       reportProgress = reportProgressObj.workflow_state
+       print(reportProgress)
+studentReportN = quiz.create_report("student_analysis")
+url = studentReportN.file["url"]
 studentData = pd.read_csv(url)
 
 #Parse the student data of those that took the survey
