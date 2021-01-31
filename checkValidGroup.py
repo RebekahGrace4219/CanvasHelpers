@@ -7,6 +7,9 @@ isValidGroup takes in that dictionary (and a list of student objects) and return
 # import system variables
 # in order to send the messages, need canvas api key
 # i put the api key in environment variables
+import os
+API_URL = "https://canvas.ucdavis.edu/"
+CANVAS_API_KEY = os.environ.get('canvas_api_key')
 
 from canvasapi import Canvas
 
@@ -26,6 +29,11 @@ def invalidGroupDict(canvas: Canvas, course_number: int):
     all_students = course.get_users()
     for student in all_students:
         studentid_groupid[str(student.id)] = []
+
+    # add in the one student from ecs 36a who for some reason does not get pulled
+    if course_number == 516271:
+        studentid_groupid["157307"] = []
+
 
     for group_cat in group_cat_list:
         group_list = group_cat.get_groups()
