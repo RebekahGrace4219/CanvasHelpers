@@ -4,6 +4,8 @@ class Student:
     #Personal data
     idNum = 0
     name = "default_name"
+    firstName = "default_firstName"
+    lastName = "default_lastName" 
     schoolEmail = "default@gmail.com"
     
     #Pronouns
@@ -42,7 +44,7 @@ class Student:
     #confidence
     confidence = "default"
     
-    def __init__(self, idNumInput = 0, nameInput = "default_name", emailInput = "default_email"):
+    def __init__(self, idNumInput = 0, nameInput = "default_name", emailInput = "default_email", firstNameInput = "default_firstName", lastNameInput = "default_lastName"):
         self.name = nameInput
         self.idNum = idNumInput
         self.schoolEmail = emailInput
@@ -60,3 +62,28 @@ class Student:
         self.freeResponse = "default"
         self.priorityList = ["default", "default", "default", "default", "default"]
         self.confidence = "default"
+        self.firstName = firstNameInput
+        self.lastName = lastNameInput
+    
+    def __str__(self): 
+        fullString = ""
+        fullString = "Name: " + self.name + " First Name: " + self.firstName + " Last Name: " + self.lastName + " idNum: " + str(self.idNum) + " schoolEmail: " + self.schoolEmail
+        fullString += " Pronouns: " + self.pronouns + " preferSame: " + str(self.preferSame) + "\n"
+        fullString += " meetingTimes\n"
+        for value in self.meetingTimes:
+            for time in value:
+                fullString += " " + str(time) + " "
+            fullString += "\n"
+        fullString += " preferAsy: " + str(self.preferAsy)
+        fullString += "\ncontactPreference: "
+        for value in self.contactPreference:
+            fullString += " " + str(value) + ", "
+        fullString += "\nContactInformation:"
+        for value in self.contactInformation:
+            fullString += " " + value + ", "
+        fullString += "\npreferLeader: " + str(self.preferLeader) + " international: " + str(self.international) +" language: " + self.language + " option1: " + self.option1 + " option2: " + self.option2 + " freeresponse: " + self.freeResponse
+        fullString += "\npriorityList: "
+        for value in self.priorityList:
+            fullString += " " + value + ", "
+        fullString += "\nconfidence: " + str(self.confidence)
+        return fullString
