@@ -5,7 +5,7 @@ class Student:
     idNum = 0
     name = "default_name"
     firstName = "default_firstName"
-    lastName = "default_lastName"
+    lastName = "default_lastName" 
     schoolEmail = "default@gmail.com"
     
     #Pronouns
@@ -13,7 +13,7 @@ class Student:
     preferSame = 1 #does the person prefer someone of their same gender.
 
     #Meet the times (starting [sunday] [midnight])
-    meetingTimes = [[1, 1, 1, 1, 1, 1],[1, 1, 1, 1, 1, 1],[1, 1, 1, 1, 1, 1],[1, 1, 1, 1, 1, 1],[1, 1, 1, 1, 1, 1],[1, 1, 1, 1, 1, 1],[1, 1, 1, 1, 1, 1]]
+    meetingTimes = [[False, False, False, False, False, False],[False, False, False, False, False, False],[False, False, False, False, False, False],[False, False, False, False, False, False],[False, False, False, False, False, False],[False, False, False, False, False, False], [False, False, False, False, False, False]]
     preferAsy = 0 # 3 values, 0 = sync, 1= no preference, 2=async
 
     #Contact Infonrmation
@@ -28,7 +28,7 @@ class Student:
     preferCountry = False
 
     # international student preference
-    international = 0
+    international = 0  
          
     #Language Preference
     language = "English"
@@ -50,7 +50,7 @@ class Student:
         self.schoolEmail = emailInput
         self.pronouns = "default/defaults"
         self.preferSame = 1
-        self.meetingTimes = [[1, 1, 1, 1, 1, 1],[1, 1, 1, 1, 1, 1],[1, 1, 1, 1, 1, 1],[1, 1, 1, 1, 1, 1],[1, 1, 1, 1, 1, 1],[1, 1, 1, 1, 1, 1],[1, 1, 1, 1, 1, 1]]
+        self.meetingTimes = [[False, False, False, False, False, False],[False, False, False, False, False, False],[False, False, False, False, False, False],[False, False, False, False, False, False],[False, False, False, False, False, False],[False, False, False, False, False, False], [False, False, False, False, False, False]]
         self.preferAsy = 0
         self.contactPreference = [False, False, False, True]
         self.contactInformation = ["defaultDiscordName#2424", "(000) 000-0000", "deafultEmail@gmail.com"]
@@ -63,4 +63,27 @@ class Student:
         self.priorityList = ["default", "default", "default", "default", "default"]
         self.confidence = "default"
         self.firstName = firstNameInput
-        self.LastName = lastNameInput
+        self.lastName = lastNameInput
+    
+    def __str__(self): 
+        fullString = ""
+        fullString = "Name: " + self.name + " First Name: " + self.firstName + " Last Name: " + self.lastName + " idNum: " + str(self.idNum) + " schoolEmail: " + self.schoolEmail
+        fullString += " Pronouns: " + self.pronouns + " preferSame: " + str(self.preferSame) + "\n"
+        fullString += " meetingTimes\n"
+        for value in self.meetingTimes:
+            for time in value:
+                fullString += " " + str(time) + " "
+            fullString += "\n"
+        fullString += " preferAsy: " + str(self.preferAsy)
+        fullString += "\ncontactPreference: "
+        for value in self.contactPreference:
+            fullString += " " + str(value) + ", "
+        fullString += "\nContactInformation:"
+        for value in self.contactInformation:
+            fullString += " " + value + ", "
+        fullString += "\npreferLeader: " + str(self.preferLeader) + " international: " + str(self.international) +" language: " + self.language + " option1: " + self.option1 + " option2: " + self.option2 + " freeresponse: " + self.freeResponse
+        fullString += "\npriorityList: "
+        for value in self.priorityList:
+            fullString += " " + value + ", "
+        fullString += "\nconfidence: " + str(self.confidence)
+        return fullString

@@ -9,14 +9,14 @@ from analyzeCode import gradeGroups
 from sendCanvasConvo import sendConvo
 
 #Get the right class 
-API_URL = ""
-API_KEY = ""
+API_URL = "https://canvas.ucdavis.edu/"
+API_KEY = "3438~5oDYLD2x3ncXItqCASsXHVkBWdLjHBTjajxEhuQCNHmiXmuaTQp7TGMJtLriQDDc"
 
 #Macros that will have to change to the appropriate class and survey number
-CLASS_ID = 1
-QUIZ_ID = 1
+CLASS_ID = 516271
+QUIZ_ID = 111035
 className = "ECS 154A"
-studyGroupNumber = "4"
+studyGroupNumber = "3"
 
 #Get the class data from canvas
 canvas = Canvas(API_URL, API_KEY)
@@ -43,7 +43,7 @@ url = studentReportN.file["url"]
 studentData = pd.read_csv(url)
 
 #Parse the student data of those that took the survey
-dictStudentTakeSurvey = parse(studentData, CLASS_ID)
+dictStudentTakeSurvey = parse(studentData, canvasClass, CLASS_ID)
 
 #Finds out who did not take survey (also updates the entire class with their school emails)
 dictStudentDidNotTakeSurvey = parseEmails(dictStudentTakeSurvey, canvasClass)
@@ -51,11 +51,48 @@ dictStudentDidNotTakeSurvey = parseEmails(dictStudentTakeSurvey, canvasClass)
 #Find the people who were matchedBefore, place it into a dict 
 matchedBefore = invalidGroupDict(canvas, CLASS_ID)
 
-#Create the groups:
-groups = makeGroups(dictStudentTakeSurvey, dictStudentDidNotTakeSurvey, matchedBefore)
 
-#Now that groups are matched, send emails and form groups
-#sendConvo(canvas, CLASS_ID, groups, studyGroupNumber)
+#Find the first three groups
+group_cat_list = canvasClass.get_group_categories()
 
-#Anaylze the groups: how many students with a preference got it?
-gradeGroups(groups, matchedBefore)
+#List of group sets and then the actual students
+
+userIds = []
+#Now make the groups of other students
+for studyGroupSet in group_cat_list:
+    group_list = studyGroupSet.get_groups()
+    listPerStudyGroupSet = []
+
+    for group in group_list:
+        users_list = group.get_users()
+        tempGroup = []
+        for user in users_list:
+            tempGroup.append(user.id)
+        
+        listPerStudyGroupSet.append(tempGroup)
+    
+    userIds.append(listPerStudyGroupSet)
+
+
+realGroups = []
+
+for groupSet in userIds:
+    tempGroupSet = []
+    for group in groupSet:
+        tempGroup = []
+        for i in group:
+            if i in dictStudentTakeSurvey:
+                tempGroup.append(dictStudentTakeSurvey[i])
+            elif i in dictStudentDidNotTakeSurvey:
+                tempGroup.append(dictStudentDidNotTakeSurvey[i])
+            else:
+                print("Error")
+        tempGroupSet.append(tempGroup)
+
+    realGroups.append(tempGroupSet)
+
+print(realGroups)
+
+for real in realGroups:
+    print("")
+    gradeGroups(real, matchedBefore)

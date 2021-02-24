@@ -7,8 +7,9 @@
     """
 
 # import system variables
-# in order to send the messages, need canvas api key
+# in order to send the messages, need canvas api keyjupyter
 # i put the api key in environment variables
+
 
 # Import the canvas class
 from canvasapi import Canvas
@@ -28,6 +29,16 @@ def getStudentIds(student_list: list):
     for student in student_list:
         student_ids.append(str(student.idNum))
     return student_ids
+
+def getStudentLastNames(student_list: list):
+    """Takes in the list of student objects
+    gets the last names of everyone
+    return a string of everyones last names with underscores separating
+    """
+    student_names = " _"
+    for student in student_list:
+        student_names += student.lastName + "_"
+    return student_names
 
 def uploadTable(canvas):
     """
@@ -62,7 +73,8 @@ def sendConvo(canvas: Canvas, course_number: int, group_list: list, study_group_
     for group in range(len(group_list)):
 
         members = getStudentIds(group_list[group])
-        group_name = "Study Group " + study_group_number
+        last_names = getStudentLastNames(group_list[group])
+        group_name = "Study Group " + study_group_number + ":" + last_names
         #make the group
         curr_group = curr_group_category.create_group(name=group_name)
         #edit the group
@@ -72,8 +84,5 @@ def sendConvo(canvas: Canvas, course_number: int, group_list: list, study_group_
         #make the conversation
 
         table_id = [uploadTable(canvas)]
-        canvas.create_conversation(recipients=members, body=body, subject = group_name, attachment_ids = table_id)
+        canvas.create_conversation(recipients=members, body=body, subject = group_name, attachment_ids = table_id, force_new = True)
     return
-
-
-

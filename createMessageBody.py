@@ -55,10 +55,24 @@ def getBody(student_list: list):
         body += "\n"
     return body
 
+def preferredLang(student_list: list):
+    """function to check if everyone has the same lang pref
+    If consensus, use that language
+    no consensus, use English default
+    return back the string of the language to use
+    Args:
+        student_list (list): list of student objects
+    """
+    consensus_lang = student_list[0].language
+    for student in student_list:
+        if student.language != consensus_lang:
+            consensus_lang = "English"
+    return consensus_lang
+
 def preferredContactMethod(student_list: list):
     """
     checks to see if everyone has the same preferred contact method
-    #return the preferred contact method (canvas group if no matches) 
+    return the preferred contact method (canvas group if no matches) 
     """
     contact_arr = [0, 0, 0, 0]
     num_students = len(student_list)
@@ -94,12 +108,15 @@ def generalInformationText(student_list: list, contact_method: str):
     meeting_times_list = meetingTimesList(student_list)
     meetingTable(meeting_times_list)
 
+    lang = preferredLang(student_list)
+
     general_info_text += f"This week, your group members are {names_text}.\n"
     if contact_method == "canvas groups":
         general_info_text += f"Please check your canvas groups to contact them.\n"
     else:
         general_info_text += f"You all prefer to meet via {contact_method}.\n"
     general_info_text += f"Some things you and your group memebers would like to do together are {free_response_text}.\n"
+    general_info_text +=f"Primary Language for Communication: {lang}\n"
     return general_info_text
 
 def meetingTimesList(student_list: list):
@@ -129,7 +146,6 @@ def meetingTimesList(student_list: list):
 
 def meetingTable(times: list):
     """update the table.txt to the information from list using tablulate library
-
     Args:
         times (list): list of list of TIMES of names of students who are available
         note: times[0] is all the availibilites of students from Midnight to 4am
