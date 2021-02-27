@@ -47,6 +47,13 @@ class Student:
 
         # How confident the student feels (0 - 2) default is 1
         self.confidence = 1
+
+        # partner the student wants
+        self.partner = "default"
+        
+        # the email of the partner that the student wants
+        self.partnerEmail = "default"
+        
     
     def __str__(self): 
         fullString = ""
