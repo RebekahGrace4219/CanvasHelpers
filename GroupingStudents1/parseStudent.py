@@ -54,12 +54,10 @@ def parse(studentData:pd, CLASS_ID: int):
     # numerical location of the question
     questionsLoc = []
     # iterate through all column names in csv and add location of matching id to list
-    i = 0
-    for question in fullQuestionList:
+    for loc, question in enumerate(fullQuestionList):
         for id in questionList:
             if id in question:
-                questionsLoc.append(i)
-        i += 1
+                questionsLoc.append(loc)
     # for item in questionList:
       #  questionsFull.append([word for word in fullQuestionList if item in word])
     #for item in questionsFull:
