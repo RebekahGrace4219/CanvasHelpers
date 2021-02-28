@@ -36,7 +36,7 @@ if __name__=='__main__':
        profiler = cProfile.Profile()
        profiler.enable()
        API_URL = "https://canvas.ucdavis.edu/"
-       API_KEY = "3438~n94eTVzFjUjz5GGEAqUENDVQQ0l5HRsYEKzNTvsmZ5PcXRIHRLkQaQpdQgqLWo5U"
+       API_KEY = ""
        #Macros that will have to change to the appropriate class and survey number
        CLASS_ID = 546554
        QUIZ_ID = 111034
