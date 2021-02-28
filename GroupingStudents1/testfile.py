@@ -2,14 +2,14 @@ from canvasapi import Canvas
 import pprint
 import csv
 import time
-from canvasapi.canvas_object import CanvasObject
+from canvasapi.quiz import Quiz
 import pandas as pd
 from pandas.core.accessor import register_series_accessor
 from studentClass import Student
 from parseStudent import parse, parseEmails, parsePartnerQuiz
 import cProfile, pstats
 
-def retrieveCSVfromCanvas(quiz:CanvasObject) :
+def retrieveCSVfromCanvas(quiz:Quiz, canvasAPIAccess:Canvas) :
        studentReport = quiz.create_report("student_analysis")
        reportProgress = None
        # URL of canvas progress object from studentReport
@@ -36,7 +36,7 @@ if __name__=='__main__':
        profiler = cProfile.Profile()
        profiler.enable()
        API_URL = "https://canvas.ucdavis.edu/"
-       API_KEY = ""
+       API_KEY = "3438~n94eTVzFjUjz5GGEAqUENDVQQ0l5HRsYEKzNTvsmZ5PcXRIHRLkQaQpdQgqLWo5U"
        #Macros that will have to change to the appropriate class and survey number
        CLASS_ID = 546554
        QUIZ_ID = 111034
@@ -48,12 +48,12 @@ if __name__=='__main__':
 
        # Get the right quiz and creating a Pandas dataFrame from the generated csv
        quiz = canvasClass.get_quiz(QUIZ_ID)
-       studentData = retrieveCSVfromCanvas(quiz)
+       studentData = retrieveCSVfromCanvas(quiz, canvas)
        var = parse(studentData, canvasClass)
        profiler.disable()
        missingStudents = parseEmails(var,canvasClass)
        quiz2 = canvasClass.get_quiz(QUIZ_ID2)
-       partnerQuizData = retrieveCSVfromCanvas(quiz2)
+       partnerQuizData = retrieveCSVfromCanvas(quiz2, canvas)
        parsePartnerQuiz(partnerQuizData ,canvasClass, var, missingStudents)
        
        '''
