@@ -1,21 +1,17 @@
 from studentClass import Student
 
-#Matching Functions:
-    #Takes all the various ways two students can match
-    #If asymmetrical, its based on the preferences of the first student
-
-#Return True if this was the person they wanted
+#Return levels of matching preference- From 2 (best) to 0 (worst)
 def matchPartner(student1: Student, student2: Student):
-    #Highest level of possible
-    if student1.partner == student2.name:
-        return True
-    return False
+    if student1.partner == student2.name and student1.partnerEmail == student2.schoolEmail:
+        return 2
+    elif student1.partner == student2.name:
+        return 1
+    else:
+        return 0
     
 #Return true if the people wanted eachother
 def matchSymPartner(student1: Student, student2: Student):
-    return matchPartner(student1, student2) and matchPartner(student2, student1)
-
-
+    return matchPartner(student1, student2) > 0 and matchPartner(student2, student1) >0 
 
 #return True if the two second student matches the first student's preferences
 def matchInternational(student1: Student, student2: Student):
