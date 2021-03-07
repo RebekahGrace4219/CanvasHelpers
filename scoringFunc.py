@@ -33,7 +33,7 @@ def scoreOneByOne(student1: Student, student2: Student, matchDict: dict):
     scoreWeights = [50, 30, 15, 5, 0]
     score = 0
     
-    if matchPartner(student1, student2) or matchPartner(student2, student1):
+    if matchPartner(student1, student2) > 0 and  matchPartner(student2, student1) > 0:
         score += 40000
 
     for i in range(4):
@@ -161,7 +161,7 @@ def scoreOneByGroup(student: Student, group: list, matchedBefore: dict):
     score = 0
 
     for student1 in group:
-        if matchPartner(student1, student) or matchPartner(student, student1):
+        if matchPartner(student1, student)>0 or matchPartner(student, student1)>0:
             score += 40000
 
     for student1 in group:
