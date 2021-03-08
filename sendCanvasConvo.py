@@ -58,10 +58,10 @@ def uploadTable(canvas):
     
     return did_upload[1]['id']
 
-
-def sendConvo(canvas: Canvas, course_number: int, group_list: list, study_group_number: str):
+def makeGroupAndMsg(canvas: Canvas, course_number: int, group_list: list, study_group_number: str):
     """
-    for every group in the group_list, send a conversation for each student per group
+    Takes in the list of groups and 1) makes every group in canvas 2) creates the corresponding group msg
+    and returns a dictionary of groups and its matching message
     """
     course = canvas.get_course(course_number)
     
@@ -70,6 +70,7 @@ def sendConvo(canvas: Canvas, course_number: int, group_list: list, study_group_
     #make the study group category
     curr_group_category = course.create_group_category(name=category_name, self_signup=None)
 
+    group_info_dict = {}
     for group in range(len(group_list)):
 
         members = getStudentIds(group_list[group])
@@ -83,6 +84,28 @@ def sendConvo(canvas: Canvas, course_number: int, group_list: list, study_group_
         body = getBody(group_list[group])
         #make the conversation
 
+        group_info_dict[body] = [group,members, group_name]
+    return group_info_dict
+
+
+def sendConvo(canvas: Canvas, course_number: int, group_info_dict: dict, study_group_number: str):
+    """
+    takes in a dictionary of message to group
+    send the message to the appropriate group in canvas
+    """
+    course = canvas.get_course(course_number)
+    
+    course_name = course.name
+    category_name = "Study Groups " + study_group_number
+
+    for group in group_info_dict:
+
+        members = group_info_dict[group][1]
+        group_name = group_info_dict[group][2]
+
         table_id = [uploadTable(canvas)]
-        canvas.create_conversation(recipients=members, body=body, subject = group_name, attachment_ids = table_id, force_new = True)
+        canvas.create_conversation(recipients=members, body=group, subject = group_name, attachment_ids = table_id, force_new = True)
     return
+
+
+
