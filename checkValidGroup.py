@@ -3,6 +3,7 @@ invalidGroupDict returns a dictionary. This function only needs to be run once.
 isValidGroup takes in that dictionary (and a list of student objects) and returns the count of how mamy times students have overlapped with each other
     """
 
+
 # import system variables
 # in order to send the messages, need canvas api key
 # i put the api key in environment variables
@@ -29,9 +30,7 @@ def invalidGroupDict(canvas: Canvas, course_number: int):
     # add in the one student from ecs 36a who for some reason does not get pulled
     if course_number == 516271:
         studentid_groupid["157307"] = []
-        studentid_groupid["230430"] = []
-    elif course_number == 546554:
-        studentid_groupid["207234"] = []
+
 
     for group_cat in group_cat_list:
         group_list = group_cat.get_groups()
@@ -40,8 +39,8 @@ def invalidGroupDict(canvas: Canvas, course_number: int):
             for j in users_list:
                 studentid_groupid[str(j.id)].append(group.id)
 
-
     return studentid_groupid
+
 
 def isValidGroup(invalid_group_dict: dict, student_list: list):
     """
@@ -62,3 +61,4 @@ def isValidGroup(invalid_group_dict: dict, student_list: list):
                     count += 1
     
     return count
+

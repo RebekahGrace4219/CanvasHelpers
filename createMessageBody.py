@@ -9,7 +9,6 @@ import numpy as np
 # import tablulate for making the meeting times table
 from tabulate import tabulate
 
-
 def getBody(student_list: list):
     """
     creates the body of the email based on information from the students
@@ -60,6 +59,7 @@ def preferredLang(student_list: list):
     If consensus, use that language
     no consensus, use English default
     return back the string of the language to use
+
     Args:
         student_list (list): list of student objects
     """
@@ -146,14 +146,19 @@ def meetingTimesList(student_list: list):
 
 def meetingTable(times: list):
     """update the table.txt to the information from list using tablulate library
+
     Args:
         times (list): list of list of TIMES of names of students who are available
         note: times[0] is all the availibilites of students from Midnight to 4am
     """
     col_names = ["Times", "Sun", "Mon", "Tues", "Wed", "Thur", "Fri", "Sat"]
+
+
+    # the following saves the table as a txt file in "table.txt"
     table = tabulate([times[0], times[1], times[2], times[3], times[4], times[5]], col_names, tablefmt="grid")
     with open('table.txt', 'w') as w:
         w.write(str(table))
+    
     return
    
 
