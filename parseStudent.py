@@ -1,13 +1,11 @@
+from typing import Generator, Iterable
 from canvasapi import Canvas
 import pprint
 import math
 import pandas as pd
 from studentClass import Student
-from canvasapi.canvas_object import CanvasObject
-import csv
 
-
-def parse(studentData:pd, CLASS_ID: int):
+def parse(studentData:Generator, CLASS_ID: int):
     #Fill the dictionary and the student lists
     dictSt = {}
     pronounsQ = '1106598'
@@ -49,27 +47,30 @@ def parse(studentData:pd, CLASS_ID: int):
         priorityQ = '1106653'
         studentPerfQ = '1106654'
 
-# the list of question ids of questions 
-    questionList = [pronounsQ, pronounsFree, genderMatchQ, syncQ, timeQ, commPreferenceQ, commValuesQ, leaderQ, internationalQ, languageQ, languageFree, groupWantsQ, groupWantsFree, priorityQ, studentPerfQ]
+    # the list of question ids of questions 
+    questionList = ['id', 'name', pronounsQ, pronounsFree, genderMatchQ, syncQ, timeQ, commPreferenceQ, commValuesQ, leaderQ, internationalQ, languageQ, languageFree, groupWantsQ, groupWantsFree, priorityQ, studentPerfQ]
     # all columns in the student data csv. Need for full question string
-    fullQuestionList = studentData.columns.values.tolist()
-    # print(fullQuestionList)
     # numerical location of the question
     questionsLoc = []
+    # find locate question function starts here
     # iterate through all column names in csv and add location of matching id to list
-    for loc, question in enumerate(fullQuestionList):
+    questionsDict = {}
+    for loc, question in enumerate(next(studentData)):
         for id in questionList:
-            if id in question:
-                questionsLoc.append(loc)
+            if id == question:
+                questionsDict[id] = loc
+                questionList.remove(id)
+            elif id in question:
+                questionsDict[id] = loc
+                questionList.remove(id)
+    
+    
     # for item in questionList:
       #  questionsFull.append([word for word in fullQuestionList if item in word])
     #for item in questionsFull:
     #    questionLoc.append(studentData.columns.get_loc(item))
-    questionsDict = dict(zip(questionList, questionsLoc)) 
-    questionsDict['id'] = studentData.columns.get_loc('id')
-    questionsDict['name'] = studentData.columns.get_loc('name')
 
-    for row in studentData.itertuples(index=False, name=None):
+    for row in studentData:
 
         #name and id
         tempStudent = Student(row[questionsDict['id']], row[questionsDict['name']])
@@ -133,9 +134,11 @@ def parse(studentData:pd, CLASS_ID: int):
         #contact info - [DiscordHandle, PhoneNumber, personal@email.com]
         tempArr = (row[questionsDict[commValuesQ]])
         if type(tempArr) is str:
-            contactInfo = tempArr.split(",")
-            for i in range(3):
-                tempStudent.contactInformation[i] = contactInfo[i]
+            if len(tempArr) != 0:
+                contactInfo = tempArr.split(",")
+                for i in range (3):
+                    tempStudent.contactInformation[i] = contactInfo[i]
+                
 
         #prefer leader- True if they prefer to be the leader, false otherwise
         studentLeader = row[questionsDict[leaderQ]]
@@ -246,45 +249,3 @@ def parseEmails(dictSt:dict, canvasClass:Canvas):
             dictSt[user.id] = tempStudent
 
     return missingSt
-
-# temporary stopgap for adding partner option
-# add the actual question to the full quiz
-def parsePartnerQuiz (quizData:pd, CLASS_ID:int , dictSt:dict, missingSt:dict) :
-
-    personNameQ = '1162587'
-    personEmailQ =  '1162588'
-    if CLASS_ID == 516271 :
-        personNameQ = '1162590' 
-        personEmailQ = '1162591'
-    
-    questionList = [personNameQ, personEmailQ]    # all columns in the student data csv. Need for full question string
-    fullQuestionList = quizData.columns.values.tolist()
-    # print(fullQuestionList)
-    # numerical location of the question
-    questionsLoc = []
-    # iterate through all column names in csv and add location of matching id to list
-    for loc, question in enumerate(fullQuestionList):
-        for id in questionList:
-            if id in question:
-                questionsLoc.append(loc)
-    # make a dictionary where question id matches to the question location
-    questionsDict = dict(zip(questionList, questionsLoc)) 
-    questionsDict['id'] = quizData.columns.get_loc('id')
-    questionsDict['name'] = quizData.columns.get_loc('name')
-
-    for row in quizData.itertuples(index=False, name=None):
-        id = row[questionsDict['id']]
-        temp = row[questionsDict[personNameQ]]
-        if type(temp) is str and (len(temp)):
-            if id in dictSt :
-                dictSt[id].partner = temp
-            else :
-                missingSt[id].partner = temp
-        
-        temp = row[questionsDict[personEmailQ]]
-        if type(temp) is str and (len(temp)):
-            
-            if id in dictSt :
-                dictSt[id].partnerEmail = temp
-            else :
-                missingSt[id].partnerEmail = temp
