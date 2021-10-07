@@ -20,4 +20,5 @@ When given a Canvas Quiz containing the appropriate questions, the program will 
 
 ## Contributing
 
+This project was built by Rebekah Grace, Howard Wang, and Stephanie Chung for a Professor Butner at UC Davis.
 This is a closed project, not available for contributions.  
