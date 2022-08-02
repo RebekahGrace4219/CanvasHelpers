@@ -12,11 +12,11 @@ A collection of useful applications for doing things Canvas can't do natively
   
 2. If ever moved from ECS 036A and ECS 154A, the quiz numbers in the parser will need to be updated and possibly the questions themselves
 
-3. There is no UI, the code's main file must be changed. The needed MACROs are located on the top of the header.
+3. There is no UI, the code's main file must be changed. The needed macros are located on the top of the header.
 
 ## Usage
  
-When given a Canvas Quiz containing the appropriate questions, the program will automatically download the class list and the student responses. It create groups of students based on their own stated preferences.  Students who do not fill the quiz are given lowest priority.  The program will actively go into Canvas and create groups with the name "Study Group " + str(studyGroupNumber), no additional work is necessary.  Students will also get a message in their canvas inbox, listing their groupmates available schedules and preferences.
+When given a Canvas Quiz containing the appropriate questions, the program will automatically download the class list and the student responses. It create groups of students based on their own stated preferences.  Students who do not fill out the quiz are given lowest priority and are matched to eachother.  The program will actively go into Canvas and create groups with the name "Study Group " + str(studyGroupNumber). No additional work is necessary.  Students will also get a message in their canvas inbox, listing their groupmates' schedules.
 
 ## Contributing
 
